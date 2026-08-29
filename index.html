@@ -1134,13 +1134,23 @@ body.peters-loaded .framer-13skru8-container.peters-nav-hidden {
                     ruleSec.id = 'peters-rule-section';
                     ruleSec.innerHTML = `<div style="width:100%;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:24px 24px 80px 24px;box-sizing:border-box;gap:32px;"><img src="./rule.webp" alt="Rules of Peter's Gym" loading="lazy" decoding="async" style="max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;display:block;border-radius:10px;box-shadow:0 10px 40px rgba(0,0,0,0.85);" /><a href="#main" id="peters-go-to-top" onclick="window.__petersGoToTop(event)" style="position:relative;z-index:99999;pointer-events:auto;display:inline-flex;align-items:center;justify-content:center;gap:10px;background-color:#ffffff;color:#000000;border:none;outline:none;text-decoration:none;padding:14px 32px;border-radius:100px;font-family:'Anton', 'Clash Grotesk', sans-serif;font-size:16px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;cursor:pointer;transition:transform 0.25s ease, background-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;box-shadow:0 4px 20px rgba(0,0,0,0.5);user-select:none;-webkit-tap-highlight-color:transparent;"><span>GO TO TOP</span><svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;transform:rotate(-90deg);"><path d="M 12.275 1.823 C 12.275 1.368 11.907 1 11.452 1 L 4.049 1 C 3.595 1 3.227 1.368 3.227 1.823 C 3.227 2.277 3.595 2.645 4.049 2.645 L 10.63 2.645 L 10.63 9.226 C 10.63 9.68 10.998 10.048 11.452 10.048 C 11.907 10.048 12.275 9.68 12.275 9.226 Z M 1.582 11.694 L 2.163 12.275 L 12.034 2.404 L 11.453 1.823 L 10.871 1.241 L 1 11.112 Z" fill="currentColor"></path></svg></a></div>`;
                     joinSec.parentNode.insertBefore(ruleSec, joinSec.nextSibling);
+
+            // Ensure official footer is attached right after ruleSec
+            const officialFooter = document.getElementById('peters-official-footer');
+            if (ruleSec && officialFooter) {
+                if (officialFooter.previousElementSibling !== ruleSec) {
+                    ruleSec.parentNode.insertBefore(officialFooter, ruleSec.nextSibling);
+                }
+                officialFooter.style.display = 'block';
+            }
+
                 }
 
                 let next = ruleSec.nextElementSibling;
                 while (next) {
                     const toRemove = next;
                     next = next.nextElementSibling;
-                    if (toRemove.tagName !== 'SCRIPT') {
+                    if (toRemove.tagName !== 'SCRIPT' && toRemove.id !== 'peters-official-footer' && toRemove.id !== 'peters-policy-modal') {
                         toRemove.remove();
                     }
                 }
