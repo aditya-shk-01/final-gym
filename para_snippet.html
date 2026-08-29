@@ -1,0 +1,36 @@
+testimonial3.png';
+                        img.alt = 'HARSH';
+                    }
+                }
+            });
+
+            // 7. Paragraph after header:
+            // "PETER'S GYM built for athletes who want structure, consistency, and results through disciplined training."
+            document.querySelectorAll('.framer-1qufcn1-container').forEach(container => {
+                const textEl = container.querySelector('div, p');
+                if (textEl && (textEl.textContent.includes('performance training community') || textEl.textContent.includes('ARISE is a'))) {
+                    textEl.innerHTML = `<span style="color:#fff;font-size:inherit;line-height:inherit;">PETER'S GYM built for athletes who want structure, consistency, and results through disciplined training.</span>`;
+                }
+            });
+
+            // Section title: WHAT PETER STANDS FOR
+            document.querySelectorAll('.framer-1d7c68y p').forEach(p => {
+                if (p.textContent.includes('WHAT ARISE') || p.textContent.includes('WHAT PETER')) {
+                    p.textContent = "WHAT PETER STANDS FOR";
+                }
+            });
+
+            // 8. Red Section Headings: PETER'S (above GYM) and NO EXCUSES
+            const redSection = document.querySelector('.framer-160b0xh');
+            if (redSection) {
+                const petersH = redSection.querySelector('.framer-1vhj11o h1');
+                if (petersH && petersH.textContent !== "PETER'S") petersH.textContent = "PETER'S";
+
+                const gymH = redSection.querySelector('.framer-m30psf h1');
+                if (gymH && gymH.textContent !== "GYM") gymH.textContent = "GYM";
+
+                const noH = redSection.querySelector('.framer-1oy8ttq h1');
+                if (noH && noH.textContent !== "NO") noH.textContent = "NO";
+
+                const excusesH = redSection.querySelector('.framer-o1ni8k h1');
+                if (excusesH && excusesH.textContent !== "EXCUSES") excusesH.textContent =
