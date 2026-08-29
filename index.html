@@ -712,10 +712,24 @@ html, body {
 .peters-partner-card {
     position: relative !important;
     overflow: hidden !important;
-    border-radius: 10px !important;
-    background-color: #111111 !important;
     cursor: pointer !important;
-    user-select: none !important;
+    background: #0d0d0d !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border-radius: 10px !important;
+}
+
+.peters-video-poster {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    object-position: center !important;
+    z-index: 1 !important;
+    transition: opacity 0.3s ease !important;
 }
 
 .peters-partner-card video {
@@ -725,15 +739,14 @@ html, body {
     width: 100% !important;
     height: 100% !important;
     object-fit: cover !important;
-    display: block !important;
-    border-radius: 10px !important;
+    object-position: center !important;
+    z-index: 2 !important;
     pointer-events: none !important;
     transform: translateZ(0) !important;
-    transition: filter 0.3s ease !important;
 }
 
 .peters-partner-card.is-paused video {
-    filter: brightness(0.7) !important;
+    opacity: 0.8 !important;
 }
 
 .peters-play-pause-btn {
@@ -741,11 +754,12 @@ html, body {
     top: 50% !important;
     left: 50% !important;
     transform: translate(-50%, -50%) scale(1) !important;
-    width: 44px !important;
-    height: 44px !important;
+    width: 48px !important;
+    height: 48px !important;
     border-radius: 50% !important;
-    background: rgba(0, 0, 0, 0.65) !important;
-    border: 1.5px solid rgba(255, 255, 255, 0.4) !important;
+    background: rgba(255, 4, 32, 0.9) !important;
+    border: 2px solid #ffffff !important;
+    box-shadow: 0 4px 20px rgba(255, 4, 32, 0.5), 0 0 15px rgba(0, 0, 0, 0.6) !important;
     backdrop-filter: blur(8px) !important;
     -webkit-backdrop-filter: blur(8px) !important;
     display: flex !important;
@@ -755,24 +769,24 @@ html, body {
     z-index: 10 !important;
     pointer-events: auto !important;
     transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background 0.2s ease, opacity 0.25s ease !important;
-    opacity: 0;
-}
-
-.peters-partner-card:hover .peters-play-pause-btn,
-.peters-partner-card.is-paused .peters-play-pause-btn {
     opacity: 1 !important;
 }
 
-.peters-partner-card.is-paused .peters-play-pause-btn {
-    transform: translate(-50%, -50%) scale(1.1) !important;
-    background: rgba(255, 4, 32, 0.85) !important;
-    border-color: #ff0420 !important;
+/* While playing: Hide button until hover */
+.peters-partner-card:not(.is-paused) .peters-play-pause-btn {
+    opacity: 0 !important;
+    background: rgba(0, 0, 0, 0.7) !important;
+    border-color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.peters-partner-card:not(.is-paused):hover .peters-play-pause-btn {
+    opacity: 1 !important;
 }
 
 .peters-play-pause-btn:hover {
     transform: translate(-50%, -50%) scale(1.15) !important;
     background: #ff0420 !important;
-    border-color: #ff0420 !important;
+    border-color: #ffffff !important;
 }
 
 .peters-play-icon {
@@ -1590,14 +1604,14 @@ body.peters-loaded .framer-13skru8-container.peters-nav-hidden {
                 });
             });
 
-            // 16. Trusted Partners: 6 Videos with Play/Pause Control Overlay
+            // 16. Trusted Partners: 6 Videos with Play/Pause Control Overlay (Paused on default)
             const partnerVideos = [
-                { container: '.framer-13vdafj-container', src: './pt1.mp4' },
-                { container: '.framer-19gq6ru-container', src: './pt2.mp4' },
-                { container: '.framer-ejfrt6-container', src: './pt3.mp4' },
-                { container: '.framer-xyupzd-container', src: './pt4.mp4' },
-                { container: '.framer-1rxiccl-container', src: './pt5.mp4' },
-                { container: '.framer-18h7hkg-container', src: './pt6.mp4' }
+                { container: '.framer-13vdafj-container', src: './pt1.mp4', poster: './pt1_poster.webp' },
+                { container: '.framer-19gq6ru-container', src: './pt2.mp4', poster: './pt2_poster.webp' },
+                { container: '.framer-ejfrt6-container', src: './pt3.mp4', poster: './pt3_poster.webp' },
+                { container: '.framer-xyupzd-container', src: './pt4.mp4', poster: './pt4_poster.webp' },
+                { container: '.framer-1rxiccl-container', src: './pt5.mp4', poster: './pt5_poster.webp' },
+                { container: '.framer-18h7hkg-container', src: './pt6.mp4', poster: './pt6_poster.webp' }
             ];
 
             partnerVideos.forEach(item => {
@@ -1605,24 +1619,18 @@ body.peters-loaded .framer-13skru8-container.peters-nav-hidden {
                     const card = box.querySelector('.framer-uZcH8') || box;
                     if (card && !card.dataset.partnerVideoAttached) {
                         card.dataset.partnerVideoAttached = 'true';
-                        card.classList.add('peters-partner-card');
+                        card.classList.add('peters-partner-card', 'is-paused');
                         card.innerHTML = '';
                         
-                        const video = document.createElement('video');
-                        video.src = item.src;
-                        video.muted = true;
-                        video.loop = true;
-                        video.autoplay = true;
-                        video.playsInline = true;
-                        video.setAttribute('muted', '');
-                        video.setAttribute('autoplay', '');
-                        video.setAttribute('loop', '');
-                        video.setAttribute('playsinline', '');
-                        video.setAttribute('webkit-playsinline', 'true');
-                        video.setAttribute('disablePictureInPicture', '');
-                        video.setAttribute('disableRemotePlayback', '');
-                        video.preload = 'auto';
-                        card.appendChild(video);
+                        // Default poster image
+                        const posterImg = document.createElement('img');
+                        posterImg.className = 'peters-video-poster';
+                        posterImg.src = item.poster;
+                        posterImg.alt = "Partner Video";
+                        posterImg.loading = "lazy";
+                        card.appendChild(posterImg);
+
+                        let video = null;
 
                         // Play/Pause Button
                         const btn = document.createElement('button');
@@ -1630,11 +1638,12 @@ body.peters-loaded .framer-13skru8-container.peters-nav-hidden {
                         btn.setAttribute('aria-label', 'Toggle Play/Pause');
                         btn.setAttribute('type', 'button');
 
-                        const playSvg = '<svg class="peters-play-icon" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';
-                        const pauseSvg = '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
+                        const playSvg = '<svg class="peters-play-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';
+                        const pauseSvg = '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
+                        btn.innerHTML = playSvg;
 
                         const updateBtnState = () => {
-                            if (video.paused) {
+                            if (!video || video.paused) {
                                 card.classList.add('is-paused');
                                 btn.innerHTML = playSvg;
                             } else {
@@ -1642,13 +1651,38 @@ body.peters-loaded .framer-13skru8-container.peters-nav-hidden {
                                 btn.innerHTML = pauseSvg;
                             }
                         };
-                        updateBtnState();
 
                         const togglePlayPause = (e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
+                            if (e) {
+                                e.preventDefault();
+                                e.stopPropagation();
+                            }
+                            
+                            // On-demand video creation
+                            if (!video) {
+                                video = document.createElement('video');
+                                video.src = item.src;
+                                video.loop = true;
+                                video.playsInline = true;
+                                video.setAttribute('playsinline', '');
+                                video.setAttribute('webkit-playsinline', 'true');
+                                video.setAttribute('disablePictureInPicture', '');
+                                video.setAttribute('disableRemotePlayback', '');
+                                
+                                video.addEventListener('play', updateBtnState);
+                                video.addEventListener('pause', updateBtnState);
+                                
+                                card.appendChild(video);
+                            }
+
+                            // Pause any other playing partner videos
+                            document.querySelectorAll('.peters-partner-card video').forEach(otherVid => {
+                                if (otherVid !== video && !otherVid.paused) {
+                                    otherVid.pause();
+                                }
+                            });
+
                             if (video.paused) {
-                                video.muted = true;
                                 const p = video.play();
                                 if (p !== undefined) p.catch(() => {});
                             } else {
@@ -1660,38 +1694,24 @@ body.peters-loaded .framer-13skru8-container.peters-nav-hidden {
                         btn.addEventListener('click', togglePlayPause);
                         card.addEventListener('click', togglePlayPause);
                         card.appendChild(btn);
-
-                        video.addEventListener('play', updateBtnState);
-                        video.addEventListener('pause', updateBtnState);
-
-                        const tryPlay = () => {
-                            video.muted = true;
-                            const p = video.play();
-                            if (p !== undefined) p.catch(() => {});
-                        };
-                        tryPlay();
-                        video.addEventListener('loadeddata', tryPlay, { once: true });
                     }
                 });
             });
 
-            // Viewport Auto-Pause to preserve 60fps when user scrolls away
+            // Viewport Auto-Pause (only pauses when scrolled out of view)
             if (!window.__partnerVideoObserverInitialized && 'IntersectionObserver' in window) {
                 window.__partnerVideoObserverInitialized = true;
                 const vObs = new IntersectionObserver((entries) => {
                     entries.forEach(entry => {
-                        const v = entry.target;
-                        if (entry.isIntersecting) {
-                            v.muted = true;
-                            const playPromise = v.play();
-                            if (playPromise !== undefined) playPromise.catch(() => {});
-                        } else {
-                            if (!v.paused) v.pause();
+                        const card = entry.target;
+                        const v = card.querySelector('video');
+                        if (!entry.isIntersecting && v && !v.paused) {
+                            v.pause();
                         }
                     });
-                }, { rootMargin: '300px 0px 300px 0px', threshold: 0.01 });
+                }, { rootMargin: '100px 0px 100px 0px', threshold: 0.05 });
 
-                document.querySelectorAll('.framer-1fq5bc8 video').forEach(v => vObs.observe(v));
+                document.querySelectorAll('.peters-partner-card').forEach(c => vObs.observe(c));
             }
 
             // 18. Remove ARISE! ARISE! from Join Movement paragraph
