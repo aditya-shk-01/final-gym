@@ -733,6 +733,79 @@ html, body {
 }
 </style>
 
+
+<style id="peters-partner-video-controls-style">
+.peters-partner-card {
+    position: relative !important;
+    overflow: hidden !important;
+    border-radius: 10px !important;
+    background-color: #111111 !important;
+    cursor: pointer !important;
+    user-select: none !important;
+}
+
+.peters-partner-card video {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    display: block !important;
+    border-radius: 10px !important;
+    pointer-events: none !important;
+    transform: translateZ(0) !important;
+    transition: filter 0.3s ease !important;
+}
+
+.peters-partner-card.is-paused video {
+    filter: brightness(0.7) !important;
+}
+
+.peters-play-pause-btn {
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) scale(1) !important;
+    width: 44px !important;
+    height: 44px !important;
+    border-radius: 50% !important;
+    background: rgba(0, 0, 0, 0.65) !important;
+    border: 1.5px solid rgba(255, 255, 255, 0.4) !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    color: #ffffff !important;
+    z-index: 10 !important;
+    pointer-events: auto !important;
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background 0.2s ease, opacity 0.25s ease !important;
+    opacity: 0;
+}
+
+.peters-partner-card:hover .peters-play-pause-btn,
+.peters-partner-card.is-paused .peters-play-pause-btn {
+    opacity: 1 !important;
+}
+
+.peters-partner-card.is-paused .peters-play-pause-btn {
+    transform: translate(-50%, -50%) scale(1.1) !important;
+    background: rgba(255, 4, 32, 0.85) !important;
+    border-color: #ff0420 !important;
+}
+
+.peters-play-pause-btn:hover {
+    transform: translate(-50%, -50%) scale(1.15) !important;
+    background: #ff0420 !important;
+    border-color: #ff0420 !important;
+}
+
+.peters-play-icon {
+    margin-left: 2px;
+}
+</style>
+
 </head>
 
 <body>
@@ -1529,7 +1602,7 @@ body.peters-loaded .framer-13skru8-container.peters-nav-hidden {
                 });
             });
 
-            // 16. Trusted Partners: 6 Lightweight Faststart Videos
+            // 16. Trusted Partners: 6 Videos with Play/Pause Control Overlay
             const partnerVideos = [
                 { container: '.framer-13vdafj-container', src: './pt1.mp4' },
                 { container: '.framer-19gq6ru-container', src: './pt2.mp4' },
@@ -1544,11 +1617,8 @@ body.peters-loaded .framer-13skru8-container.peters-nav-hidden {
                     const card = box.querySelector('.framer-uZcH8') || box;
                     if (card && !card.dataset.partnerVideoAttached) {
                         card.dataset.partnerVideoAttached = 'true';
+                        card.classList.add('peters-partner-card');
                         card.innerHTML = '';
-                        card.style.position = 'relative';
-                        card.style.overflow = 'hidden';
-                        card.style.borderRadius = '10px';
-                        card.style.backgroundColor = '#111111';
                         
                         const video = document.createElement('video');
                         video.src = item.src;
@@ -1564,17 +1634,47 @@ body.peters-loaded .framer-13skru8-container.peters-nav-hidden {
                         video.setAttribute('disablePictureInPicture', '');
                         video.setAttribute('disableRemotePlayback', '');
                         video.preload = 'auto';
-                        video.style.position = 'absolute';
-                        video.style.top = '0';
-                        video.style.left = '0';
-                        video.style.width = '100%';
-                        video.style.height = '100%';
-                        video.style.objectFit = 'cover';
-                        video.style.display = 'block';
-                        video.style.borderRadius = '10px';
-                        video.style.pointerEvents = 'none';
-                        video.style.transform = 'translateZ(0)';
                         card.appendChild(video);
+
+                        // Play/Pause Button
+                        const btn = document.createElement('button');
+                        btn.className = 'peters-play-pause-btn';
+                        btn.setAttribute('aria-label', 'Toggle Play/Pause');
+                        btn.setAttribute('type', 'button');
+
+                        const playSvg = '<svg class="peters-play-icon" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';
+                        const pauseSvg = '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
+
+                        const updateBtnState = () => {
+                            if (video.paused) {
+                                card.classList.add('is-paused');
+                                btn.innerHTML = playSvg;
+                            } else {
+                                card.classList.remove('is-paused');
+                                btn.innerHTML = pauseSvg;
+                            }
+                        };
+                        updateBtnState();
+
+                        const togglePlayPause = (e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            if (video.paused) {
+                                video.muted = true;
+                                const p = video.play();
+                                if (p !== undefined) p.catch(() => {});
+                            } else {
+                                video.pause();
+                            }
+                            updateBtnState();
+                        };
+
+                        btn.addEventListener('click', togglePlayPause);
+                        card.addEventListener('click', togglePlayPause);
+                        card.appendChild(btn);
+
+                        video.addEventListener('play', updateBtnState);
+                        video.addEventListener('pause', updateBtnState);
 
                         const tryPlay = () => {
                             video.muted = true;
