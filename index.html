@@ -1817,17 +1817,7 @@ body.peters-loaded .framer-13skru8-container.peters-nav-hidden {
     function showNav() {
         document.body.classList.add('nav-visible', 'peters-loaded');
     }
-    // Show nav on interaction, scroll, or after 1.5s load completion
-    ['touchstart', 'pointerdown', 'scroll', 'wheel', 'keydown', 'click'].forEach(function(e) {
-        window.addEventListener(e, showNav, { once: true, passive: true });
-    });
-    if (document.readyState === 'complete') {
-        setTimeout(showNav, 1200);
-    } else {
-        window.addEventListener('load', function() {
-            setTimeout(showNav, 1000);
-        });
-    }
+    setTimeout(showNav, 3500);
 })();
 </script>
 <!-- ================= PETER'S GYM OFFICIAL FOOTER & POLICIES (ANIMATED & LOCKED) ================= -->
@@ -2217,16 +2207,8 @@ body.peters-loaded .framer-13skru8-container.peters-nav-hidden {
         document.body.classList.add('nav-visible', 'peters-loaded');
     }
 
-    // Single smooth reveal after 1.2s
-    setTimeout(liftCurtain, 1200);
-
-    window.addEventListener('load', function() {
-        setTimeout(liftCurtain, 1000);
-    });
-
-    ['touchstart', 'pointerdown', 'scroll', 'wheel', 'keydown', 'click'].forEach(function(e) {
-        window.addEventListener(e, liftCurtain, { once: true, passive: true });
-    });
+    // Set loading duration to 3.5 seconds for complete asset preparation
+    setTimeout(liftCurtain, 3500);
 })();
 </script>
 
