@@ -304,7 +304,7 @@
 
 
 <style id="peters-head-preloader-style">
-/* DO WORKOUT Cinematic Preloader */
+/* Highly-Optimized Hardware-Accelerated DO WORKOUT Preloader */
 .framer-1cnm44i-container {
     position: fixed !important;
     top: 0 !important;
@@ -316,15 +316,18 @@
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    transform: translateY(0%);
-    transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1) !important;
+    transform: translate3d(0, 0, 0) !important;
+    transition: transform 0.85s cubic-bezier(0.76, 0, 0.24, 1) !important;
     will-change: transform;
     margin: 0 !important;
     padding: 0 !important;
+    overflow: hidden !important;
+    backface-visibility: hidden !important;
+    -webkit-backface-visibility: hidden !important;
 }
 
 .framer-1cnm44i-container.curtain-lifted {
-    transform: translateY(-100%) !important;
+    transform: translate3d(0, -100%, 0) !important;
     pointer-events: none !important;
 }
 
@@ -336,7 +339,7 @@ body.peters-loaded [data-framer-name="Start"],
     visibility: hidden !important;
     opacity: 0 !important;
     pointer-events: none !important;
-    transform: translateY(-100%) !important;
+    transform: translate3d(0, -100%, 0) !important;
 }
 
 .framer-1cnm44i-container [data-framer-name="Start"],
@@ -412,7 +415,7 @@ body.peters-loaded [data-framer-name="Start"],
     text-shadow: 0 4px 24px rgba(0, 0, 0, 0.45), 0 0 35px rgba(255, 255, 255, 0.3) !important;
 }
 
-/* Hide navigation during initial loading, smoothly reveal on ready */
+/* Smooth Navigation Reveal */
 .framer-13skru8-container {
     opacity: 0 !important;
     pointer-events: none !important;
@@ -912,6 +915,16 @@ html, body {
 
 
 
+<script>
+// Pre-decode critical hero visual assets in GPU background
+(function() {
+    try {
+        const hero = new Image();
+        hero.src = './aditya.webp';
+        if (hero.decode) hero.decode().catch(function(){});
+    } catch(e){}
+})();
+</script>
 </head>
 
 <body>
@@ -2217,13 +2230,13 @@ body.peters-loaded .framer-13skru8-container.peters-nav-hidden {
             setTimeout(function() {
                 curtain.classList.add('curtain-done');
                 try { curtain.remove(); } catch(e){}
-            }, 850);
+            }, 900);
         }
         document.body.classList.add('nav-visible', 'peters-loaded');
     }
 
-    // Natural 1.2s reveal
-    setTimeout(liftCurtain, 1200);
+    // Natural 1.25s optimal duration
+    setTimeout(liftCurtain, 1250);
 
     window.addEventListener('load', function() {
         setTimeout(liftCurtain, 1000);
