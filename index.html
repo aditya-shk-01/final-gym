@@ -592,18 +592,20 @@ html.lenis, html.lenis body { height: auto; }
 .lenis.lenis-scrolling iframe { pointer-events: none; }
 </style>
 <style id="peters-nav-loading-style">
-/* Hide navigation on initial loading, smoothly reveal on ready/scroll */
+/* Navigation always visible on initial loading and throughout */
 .framer-13skru8-container {
-    opacity: 0 !important;
-    pointer-events: none !important;
-    visibility: hidden !important;
-    transition: opacity 0.45s ease, visibility 0.45s ease !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    visibility: visible !important;
+    z-index: 9999999 !important;
+    transition: transform 0.35s ease, opacity 0.35s ease !important;
 }
 body.peters-loaded .framer-13skru8-container,
 body.nav-visible .framer-13skru8-container {
     opacity: 1 !important;
     pointer-events: auto !important;
     visibility: visible !important;
+    z-index: 9999999 !important;
 }
 </style>
 <style id="peters-wcag-contrast-style">
@@ -803,7 +805,7 @@ html, body {
     left: 0 !important;
     width: 100vw !important;
     height: 100vh !important;
-    z-index: 9999999 !important;
+    z-index: 900000 !important;
     background-color: #ff0420 !important;
     display: flex !important;
     align-items: center !important;
@@ -1196,7 +1198,7 @@ html, body, #main, :root, .framer-P1gXT, .framer-w2rilk, .framer-slJWG, .framer-
     transform: translateX(-50%) translateY(0) !important;
     width: 100% !important;
     max-width: 100vw !important;
-    z-index: 99999 !important;
+    z-index: 9999999 !important;
     padding-top: 14px !important;
     padding-bottom: 14px !important;
     transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease !important;
