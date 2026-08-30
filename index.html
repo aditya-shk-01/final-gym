@@ -796,21 +796,34 @@ html, body {
 
 
 <style id="peters-loading-bubbles-style">
-.framer-15wqeih h2,
-.framer-15wqeih h2::after,
-.framer-15wqeih h2::before {
-    display: none !important;
-    content: none !important;
-}
-
-.framer-15wqeih,
-.framer-4r360p {
-    overflow: visible !important;
-    width: auto !important;
-    height: auto !important;
+/* Single Unified Preloader */
+#peters-preloader {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    z-index: 9999999 !important;
+    background-color: #ff0420 !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
+    transform: translateY(0%);
+    transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1) !important;
+    will-change: transform;
+    pointer-events: all;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+#peters-preloader.curtain-lifted {
+    transform: translateY(-100%) !important;
+    pointer-events: none !important;
+}
+
+#peters-preloader.curtain-done {
+    display: none !important;
+    visibility: hidden !important;
 }
 
 .peters-bubbles-container {
@@ -848,11 +861,37 @@ html, body {
         box-shadow: 0 6px 14px rgba(0, 0, 0, 0.35), 0 0 14px rgba(255, 255, 255, 0.95);
     }
 }
+
+/* Suppress all Framer duplicate preloader layers and text */
+.framer-1cnm44i-container,
+[data-framer-name="Start"],
+.framer-1ent7mk,
+.framer-20o2fz,
+.framer-15wqeih,
+.framer-15wqeih h2,
+.framer-15wqeih h2::after,
+.framer-15wqeih h2::before {
+    display: none !important;
+    visibility: hidden !important;
+    content: none !important;
+    pointer-events: none !important;
+    height: 0 !important;
+    max-height: 0 !important;
+    overflow: hidden !important;
+}
 </style>
 
 </head>
 
 <body>
+<div id="peters-preloader">
+    <div class="peters-bubbles-container">
+        <div class="peters-bubble"></div>
+        <div class="peters-bubble"></div>
+        <div class="peters-bubble"></div>
+        <div class="peters-bubble"></div>
+    </div>
+</div>
 
 	
 
@@ -2167,17 +2206,18 @@ body.peters-loaded .framer-13skru8-container.peters-nav-hidden {
         if (lifted) return;
         lifted = true;
         
-        const curtain = document.querySelector('.framer-1cnm44i-container') || document.querySelector('[data-framer-name="Start"]');
-        if (curtain) {
-            curtain.style.transition = 'transform 0.8s cubic-bezier(0.77, 0, 0.175, 1)';
-            curtain.style.transform = 'translateY(-100%)';
+        const preloader = document.getElementById('peters-preloader');
+        if (preloader) {
+            preloader.classList.add('curtain-lifted');
             setTimeout(function() {
-                curtain.style.display = 'none';
+                preloader.classList.add('curtain-done');
+                try { preloader.remove(); } catch(e){}
             }, 850);
         }
+        document.body.classList.add('nav-visible', 'peters-loaded');
     }
 
-    // Smooth reveal after 1.2s of bubble animation
+    // Single smooth reveal after 1.2s
     setTimeout(liftCurtain, 1200);
 
     window.addEventListener('load', function() {
