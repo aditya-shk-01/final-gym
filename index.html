@@ -319,14 +319,29 @@
     transform: translateY(0%);
     transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1) !important;
     will-change: transform;
-    pointer-events: none !important;
     margin: 0 !important;
     padding: 0 !important;
 }
 
-[data-framer-name="Start"],
-.framer-1ent7mk,
-.framer-20o2fz {
+.framer-1cnm44i-container.curtain-lifted {
+    transform: translateY(-100%) !important;
+    pointer-events: none !important;
+}
+
+/* Once loaded: Preloader is completely removed/hidden forever */
+body.peters-loaded .framer-1cnm44i-container,
+body.peters-loaded [data-framer-name="Start"],
+.framer-1cnm44i-container.curtain-done {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    transform: translateY(-100%) !important;
+}
+
+.framer-1cnm44i-container [data-framer-name="Start"],
+.framer-1cnm44i-container .framer-1ent7mk,
+.framer-1cnm44i-container .framer-20o2fz {
     height: 100% !important;
     width: 100% !important;
     display: flex !important;
@@ -335,7 +350,7 @@
     background-color: #ff0420 !important;
 }
 
-.framer-15wqeih {
+.framer-1cnm44i-container .framer-15wqeih {
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
@@ -367,7 +382,7 @@
 }
 
 /* Ensure preloader h2 only displays DO WORKOUT */
-.framer-15wqeih h2 {
+.framer-1cnm44i-container .framer-15wqeih h2 {
     font-size: 0 !important;
     line-height: 0 !important;
     color: transparent !important;
@@ -375,13 +390,13 @@
     padding: 0 !important;
 }
 
-.framer-15wqeih h2 * {
+.framer-1cnm44i-container .framer-15wqeih h2 * {
     display: none !important;
     font-size: 0 !important;
     opacity: 0 !important;
 }
 
-.framer-15wqeih h2::after {
+.framer-1cnm44i-container .framer-15wqeih h2::after {
     content: "DO WORKOUT" !important;
     display: inline-flex !important;
     align-items: center !important;
@@ -1817,14 +1832,7 @@ body.peters-loaded .framer-13skru8-container.peters-nav-hidden {
 })();
 </script>
 
-<script>
-(function() {
-    function showNav() {
-        document.body.classList.add('nav-visible', 'peters-loaded');
-    }
-    setTimeout(showNav, 4100);
-})();
-</script>
+
 <!-- ================= PETER'S GYM OFFICIAL FOOTER & POLICIES (ANIMATED & LOCKED) ================= -->
 <footer id="peters-official-footer" style="background:#050505; border-top:1px solid rgba(255,255,255,0.08); color:#f5f5f5; font-family:'Inter Display', 'Inter', sans-serif; padding:60px 24px 30px 24px; position:relative; z-index:90; box-sizing:border-box; width:100%; margin-bottom:0 !important;">
     <div style="max-width:1200px; margin:0 auto; display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:40px 30px; box-sizing:border-box;">
@@ -2205,16 +2213,16 @@ body.peters-loaded .framer-13skru8-container.peters-nav-hidden {
         
         const curtain = document.querySelector('.framer-1cnm44i-container') || document.querySelector('[data-framer-name="Start"]');
         if (curtain) {
-            curtain.style.transition = 'transform 0.8s cubic-bezier(0.77, 0, 0.175, 1)';
-            curtain.style.transform = 'translateY(-100%)';
+            curtain.classList.add('curtain-lifted');
             setTimeout(function() {
-                curtain.style.display = 'none';
+                curtain.classList.add('curtain-done');
+                try { curtain.remove(); } catch(e){}
             }, 850);
         }
         document.body.classList.add('nav-visible', 'peters-loaded');
     }
 
-    // Natural 1.2s loading duration
+    // Natural 1.2s reveal
     setTimeout(liftCurtain, 1200);
 
     window.addEventListener('load', function() {
